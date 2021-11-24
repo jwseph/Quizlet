@@ -26,12 +26,25 @@ key1 = {
 }
 
 
+key2 = {
+
+  'a': 'ā',
+  'i': 'ī',
+  'u': 'ū',
+  'e': 'ē',
+  'o': 'ō'
+
+}
+
+
 def get_romaji(hiragana):
 
-  return re.sub('(?:(?:(?<=sh)|(?<=j))i\by)|(?:i\b)', '', ''.join(key1.get(_, _) for _ in hiragana))
+  return re.sub('(a[aー])|(i[iー])|(u[uー])|(e[eー])|(o[uoー])|(っ.)', lambda x: (lambda c: key2.get(c[0], c[1]*2))(x.group()), re.sub('(?:(?<=[hj])i\by)|(?:i\b)', '', ''.join(key1.get(_, _) for _ in hiragana))).rstrip('-')
 
 
-# おはよう ございます
+# おはよう ございます ohayō gozaimasu
+# おっちょこちょい occhokochoi
+# あたたかくなかった atatakakunakatta
 
 if __name__ == '__main__':
 
