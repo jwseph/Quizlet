@@ -26,8 +26,15 @@ def main():
 
   phrases = [phrase for page in range(1, 1+n//60) for phrase in fetch_from_page(page)]+(fetch_from_page(-(n//-60))[:n%60] if n%60 != 0 else [])
 
-  pyperclip.copy('\n'.join((lambda parsed: romaji.romaji_to_hiragana(parsed[2][1:-1])+'\t['+romaji.hiragana_to_romaji(romaji.romaji_to_hiragana(parsed[2][1:-1]))+'] '+parsed[4])(phrase.split(' ', 4)) for phrase in phrases))
+  output = ('\n'.join((lambda parsed: (lambda old_romaji: (lambda hiragana: (lambda new_romaji:
+                                                                             
+    hiragana+f"\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {parsed[2]}"
+                                                                             
+  )(romaji.hiragana_to_romaji(hiragana)))(romaji.romaji_to_hiragana(old_romaji)))(parsed[1]))(re.split(' \(|\) : ', phrase, 2)) for phrase in phrases))
 
+  print(output)
+  pyperclip.copy(output)
+  print('Copied to clipboard!')
 
 
 if __name__ == '__main__': main()
