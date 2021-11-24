@@ -89,7 +89,7 @@ key2_reverse = {
 
 def hiragana_to_romaji(hiragana):
 
-  return re.sub(r"'(?=[^aiueoy]|$)", '', re.sub('(a[aー])|(i[iー])|(u[uー])|(e[eー])|(o[uoー])|(っ[kstp])', lambda x: (lambda c: key2.get(c[0], c[1]*2))(x.group()), re.sub('(?<=[hj])i~y|i~', '', ''.join(key1.get(_, _) for _ in hiragana))))
+  return re.sub(r"'(?=[^aiueoy]|$)", '', re.sub('(a[aー])|(i[iー])|(u[uー])|(e[eー])|(o[uoー])|(っ[kstcp])', lambda x: (lambda c: key2.get(c[0], c[1]*2))(x.group()), re.sub('(?<=[hj])i~y|i~', '', ''.join(key1.get(_, _) for _ in hiragana))))
 
 
 def romaji_to_hiragana(string):
