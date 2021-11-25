@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pyperclip
+import re
 
 import romaji
 
@@ -16,7 +17,7 @@ def fetch_from_page(page):
 
   main_box = soup.find('div', 'entry-content')
 
-  phrases = [definition.text for definition in main_box.find_all('p') if 'text-align:' not in str(definition)][1+int(page==1):]
+  phrases = [re.sub(r'(?<![0-9])\. .*|\n', ' ', phrase.text).rstrip(' ') for phrase in main_box.find_all('p') if re.search(r'^[0-9]+\. ', phrase.text)]
   return phrases
 
 
@@ -27,14 +28,15 @@ def main():
   phrases = [phrase for page in range(1, 1+n//60) for phrase in fetch_from_page(page)]+(fetch_from_page(-(n//-60))[:n%60] if n%60 != 0 else [])
 
   output = ('\n'.join((lambda parsed: (lambda old_romaji: (lambda hiragana: (lambda new_romaji:
-                                                                             
+
     hiragana+f"\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {parsed[2]}"
-                                                                             
+
   )(romaji.hiragana_to_romaji(hiragana)))(romaji.romaji_to_hiragana(old_romaji)))(parsed[1]))(re.split(' \(|\) : ', phrase, 2)) for phrase in phrases))
 
   print(output)
   pyperclip.copy(output)
   print('Copied to clipboard!')
+
 
 
 if __name__ == '__main__': main()
