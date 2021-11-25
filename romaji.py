@@ -94,7 +94,7 @@ def hiragana_to_romaji(hiragana):
 
 def romaji_to_hiragana(string):
 
-  return re.sub(r"([kgsztdnhfbpmyrwj]?[yz]?|ch|sh)[aiueo]|tsu|[ns]('|(?=[^aiueoy]|$))|[ ~\.,!\?:\(\)]", lambda x: (lambda c: key1_reverse.get(c, c))(x.group()), re.sub(r'([kstcp])(?=\1)|([āīūēō])', lambda x: key2_reverse.get(x.group(), 'っ'), string.lower()))
+  return re.sub(r"([kgsztdnhfbpmyrwj]?y?|ch|sh)[aiueo]|tsu|[ns]('|(?=[^aiueoy]|$))|[ ~\.,!\?:\(\)]", lambda x: (lambda c: key1_reverse.get(c, c))(x.group()), re.sub(r'([kstcp])(?=\1)|([āīūēō])', lambda x: key2_reverse.get(x.group(), 'っ'), string.lower()))
 
 # おはよう ございます ohayō gozaimasu
 # おっちょこちょい occhokochoi
