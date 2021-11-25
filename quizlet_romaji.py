@@ -34,7 +34,7 @@ def main():
       (
         (lambda hiragana:
         (lambda new_romaji:
-            f"{hiragana}\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {definition}"
+          f"{hiragana}\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {definition}"
         )(romaji.hiragana_to_romaji(hiragana))
         )(romaji.romaji_to_hiragana(old_romaji))
       )
@@ -42,7 +42,9 @@ def main():
       if not re.search(r'[ァ-ヴー]+', old_kana) else
 
       (
-        f"{old_kana}\t[{old_romaji}]; {definition}"
+        (lambda new_romaji:
+          f"{old_kana}\t[{new_romaji+' / ' if new_romaji != old_romaji else ''}{old_romaji}]; {definition}"
+        )(re.sub(r'([aiueo])-', r'\1\1', old_romaji))
       )
 
     )(*re.split('\. | \(|\) : ', phrase, 3)) for phrase in phrases)
