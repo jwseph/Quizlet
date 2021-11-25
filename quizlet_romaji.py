@@ -23,20 +23,34 @@ def fetch_from_page(page):
 
 def main():
 
-  n = int(input('Enter number of phrases\n'))
+  n = int(input('Enter number of phrases (up to 1000)\n'))
 
   phrases = [phrase for page in range(1, 1+n//60) for phrase in fetch_from_page(page)]+(fetch_from_page(-(n//-60))[:n%60] if n%60 != 0 else [])
 
-  output = ('\n'.join((lambda parsed: (lambda old_romaji: (lambda hiragana: (lambda new_romaji:
+  output = ('\n'.join(
 
-    hiragana+f"\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {parsed[2]}"
+    (lambda number, old_kana, old_romaji, definition:
 
-  )(romaji.hiragana_to_romaji(hiragana)))(romaji.romaji_to_hiragana(old_romaji)))(parsed[1]))(re.split(' \(|\) : ', phrase, 2)) for phrase in phrases))
+      (
+        (lambda hiragana:
+        (lambda new_romaji:
+            f"{hiragana}\t[{old_romaji}{' / '+new_romaji if new_romaji != old_romaji else ''}]; {definition}"
+        )(romaji.hiragana_to_romaji(hiragana))
+        )(romaji.romaji_to_hiragana(old_romaji))
+      )
+
+      if not re.search(r'[ァ-ヴー]+', old_kana) else
+
+      (
+        f"{old_kana}\t[{old_romaji}]; {definition}"
+      )
+
+    )(*re.split('\. | \(|\) : ', phrase, 3)) for phrase in phrases)
+  )
 
   print(output)
   pyperclip.copy(output)
   print('Copied to clipboard!')
-
-
+  
 
 if __name__ == '__main__': main()
